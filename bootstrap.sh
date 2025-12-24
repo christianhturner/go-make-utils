@@ -86,6 +86,9 @@ if [ -f ".gitignore" ]; then
     echo "# Development configuration (go-make-utils)" >>.gitignore
     echo "local-config.json" >>.gitignore
     echo ".env.mk" >>.gitignore
+    echo "tools/" >>.gitignore
+    echo "tools/.go-make-utils" >>.gitignore
+    echo "tools/.go-make-utils.mk" >>.gitignore
     echo "tools/.go-make-utils.cache" >>.gitignore
     echo "✅ Updated .gitignore"
   fi
@@ -94,12 +97,15 @@ else
 # Development configuration (go-make-utils)
 local-config.json
 .env.mk
+tools/
 tools/.go-make-utils.cache
+tools/.go-make-utils.mk
+tools/.go-make-utils
 EOF
   echo "✅ Created .gitignore"
 fi
 
-# Download Makefile.include
+# Download Makefile.include to tools directory
 echo "📥 Downloading Makefile.include..."
 curl -sSL https://raw.githubusercontent.com/christianhturner/go-make-utils/main/Makefile.include -o ./tools/go-make-utils.mk
 
