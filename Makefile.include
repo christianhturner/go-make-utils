@@ -1,0 +1,46 @@
+# go-make-utils/Makefile
+# Reusable Make recipes for config management across projects
+
+# Determine the directory where this Makefile resides
+GO_MAKE_UTILS_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
+
+# Path to the config-tool binary (assumes it's built and in PATH or local bin)
+CONFIG_TOOL := $(GO_MAKE_UTILS_DIR)config-tool
+
+# Determine the project root (directory containing the main Makefile)
+PROJECT_ROOT := $(shell pwd)
+
+# Path to the generated environment file
+ENV_MK_FILE := $(PROJECT_ROOT)/.env.mk
+
+# Ensure config is up to date before any build/run operations
+.PHONY: ensure-config
+ensure-config:
+	@$(CONFIG_TOOL) ensure $(PROJECT_ROOT)
+
+# Include the generated environment variables if the file exists
+-include $(ENV_MK_FILE)
+
+# Helper target to display all loaded environment variables
+.PHONY: show-config
+show-config:
+	@echo "=== Loaded Configuration Variables ==="
+	@if [ -f "$(ENV_MK_FILE)" ]; then \
+		cat $(ENV_MK_FILE) | grep -v "^#" | grep -v "^$$"; \
+	else \
+		echo "No configuration file found. Run 'make ensure-config' first."; \
+	fi
+
+# Helper target to rebuild the config tool
+.PHONY: build-config-tool
+build-config-tool:
+	@echo "Building config-tool..."
+	@cd $(GO_MAKE_UTILS_DIR) && go build -o config-tool .
+
+# Clean generated files
+.PHONY: clean-config
+clean-config:
+	@rm -f $(PROJECT_ROOT)/local-config.json
+	@rm -f $(PROJECT_ROOT)/.env.mk
+	@echo "Cleaned local configuration files"
+
