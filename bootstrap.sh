@@ -101,7 +101,7 @@ fi
 
 # Download Makefile.include
 echo "📥 Downloading Makefile.include..."
-curl -sSL https://raw.githubusercontent.com/christianhturner/go-make-utils/main/Makefile.include -o .go-make-utils.mk
+curl -sSL https://raw.githubusercontent.com/christianhturner/go-make-utils/main/Makefile.include -o ./tools/go-make-utils.mk
 
 echo ""
 echo "✅ go-make-utils setup complete!"
@@ -109,6 +109,6 @@ echo ""
 echo "Next steps:"
 echo "  1. Edit local-config.template.json with your project's configuration keys"
 echo "  2. Add this line to your Makefile:"
-echo "     include .go-make-utils.mk"
+echo "     include ./tools/go-make-utils.mk"
 echo "  3. Add 'ensure-config' as a dependency to your build targets"
 echo "  4. Run 'make ensure-config' to configure your environment"
