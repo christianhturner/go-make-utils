@@ -88,13 +88,13 @@ func ensureConfig(projectRoot string) error {
 	return nil
 }
 
-func loadJSON(path string) (map[string]interface{}, error) {
+func loadJSON(path string) (map[string]any, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
 
-	var result map[string]interface{}
+	var result map[string]any
 	if err := json.Unmarshal(data, &result); err != nil {
 		return nil, err
 	}
@@ -102,15 +102,15 @@ func loadJSON(path string) (map[string]interface{}, error) {
 	return result, nil
 }
 
-func loadJSONOrEmpty(path string) (map[string]interface{}, bool) {
+func loadJSONOrEmpty(path string) (map[string]any, bool) {
 	result, err := loadJSON(path)
 	if err != nil {
-		return make(map[string]interface{}), false
+		return make(map[string]any), false
 	}
 	return result, true
 }
 
-func saveJSON(path string, data map[string]interface{}) error {
+func saveJSON(path string, data map[string]any) error {
 	bytes, err := json.MarshalIndent(data, "", "  ")
 	if err != nil {
 		return err
@@ -119,7 +119,7 @@ func saveJSON(path string, data map[string]interface{}) error {
 	return os.WriteFile(path, bytes, 0o644)
 }
 
-func promptForValue(key string, templateValue interface{}) string {
+func promptForValue(key string, templateValue any) string {
 	reader := bufio.NewReader(os.Stdin)
 
 	hint := ""
@@ -141,7 +141,7 @@ func promptForValue(key string, templateValue interface{}) string {
 	return value
 }
 
-func generateEnvMakeFile(config map[string]interface{}, envPath string) error {
+func generateEnvMakeFile(config map[string]any, envPath string) error {
 	var lines []string
 	lines = append(lines, "# Auto-generated  local-config.json - do not edit manually")
 
