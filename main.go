@@ -124,7 +124,7 @@ func promptForValue(key string, templateValue interface{}) string {
 
 	hint := ""
 	if templateValue != nil {
-		hint = fmt.Sprintf(" [template: %v]", templateValue)
+		hint = fmt.Sprintf(" [%v]", templateValue)
 	}
 
 	fmt.Printf("  %s%s: ", key, hint)
