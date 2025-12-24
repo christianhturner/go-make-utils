@@ -12,7 +12,7 @@ fi
 
 # Add the config-tool as a Go tool
 echo "📦 Adding config-tool..."
-go get -tool github.com/christianhturner/go-make-utils@latest
+GOPROXY=direct go get -tool github.com/christianhturner/go-make-utils@latest
 
 # Create tools directory and wrapper script
 mkdir -p tools
@@ -69,7 +69,7 @@ chmod +x tools/config-tool
 
 # Create template if it doesn't exist
 if [ ! -f "local-config.template.json" ]; then
-  echo "�� Creating local-config.template.json..."
+  echo "📄 Creating local-config.template.json..."
   cat >local-config.template.json <<EOF
 {
   "example_key": "example_value",
