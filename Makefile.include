@@ -14,11 +14,7 @@ GO_MAKE_UTILS := $(PROJECT_ROOT)/tools/go-make-utils
 # Ensure config is up to date before any build/run operations
 .PHONY: ensure-config
 ensure-config:
-	@if [ ! -f "$(GO_MAKE_UTILS)" ]; then \
-		echo "Error: go-make-utils wrapper not found at $(GO_MAKE_UTILS)"; \
-		echo "Run the bootstrap script to setup up make utilities"; \
-		exit 1;
-	fi
+	@test -f "$(GO_MAKE_UTILS)" || (echo "Error: go-make-utils wrapper not found. Run bootstrap script." && exit 1)
 	@$(GO_MAKE_UTILS) ensure $(PROJECT_ROOT)
 
 # Include the generated environment variables if the file exists
@@ -28,11 +24,7 @@ ensure-config:
 .PHONY: show-config
 show-config:
 	@echo "=== Loaded Configuration Variables ==="
-	@if [ -f "$(ENV_MK_FILE)" ]; then \
-		cat $(ENV_MK_FILE) | grep -v "^#" | grep -v "^$$"; \
-	else \
-		echo "No configuration file found. Run 'make ensure-config' first."; \
-	fi
+	@if [ -f "$(ENV_MK_FILE)" ]; then cat $(ENV_MK_FILE) | grep -v "^#" | grep -v "^$$"; else echo "No configuration file found. Run 'make ensure-config' first."; fi
 
 # Helper target to rebuild the config tool
 .PHONY: build-go-make-utils
@@ -43,7 +35,6 @@ build-go-make-utils:
 # Clean generated files
 .PHONY: clean-config
 clean-config:
-	@rm -f $(PROJECT_ROOT)/local-config.json
-	@rm -f $(PROJECT_ROOT)/.env.mk
+	@rm -f $(PROJECT_ROOT)/local-config.json $(PROJECT_ROOT)/.env.mk
 	@echo "Cleaned local configuration files"
 
