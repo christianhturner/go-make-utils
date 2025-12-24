@@ -1,3 +1,3 @@
-module go-make-utils
+module github.com/christianhturner/go-make-utils
 
 go 1.25.0
