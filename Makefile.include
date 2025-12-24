@@ -1,11 +1,6 @@
-# go-make-utils/Makefile
+# go-make-utils/Makefile.include
 # Reusable Make recipes for config management across projects
-
-# Determine the directory where this Makefile resides
-GO_MAKE_UTILS_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
-
-# Path to the config-tool binary (assumes it's built and in PATH or local bin)
-CONFIG_TOOL := $(GO_MAKE_UTILS_DIR)config-tool
+# Include this file in your project's Makefile
 
 # Determine the project root (directory containing the main Makefile)
 PROJECT_ROOT := $(shell pwd)
@@ -13,10 +8,18 @@ PROJECT_ROOT := $(shell pwd)
 # Path to the generated environment file
 ENV_MK_FILE := $(PROJECT_ROOT)/.env.mk
 
+# Path to config tool wrapper (should be created by bootstrap script)
+GO_MAKE_UTILS := $(PROJECT_ROOT)/tools/go-make-utils
+
 # Ensure config is up to date before any build/run operations
 .PHONY: ensure-config
 ensure-config:
-	@$(CONFIG_TOOL) ensure $(PROJECT_ROOT)
+	@if [ ! -f "$(GO_MAKE_UTILS)" ]; then \
+		echo "Error: go-make-utils wrapper not found at $(GO_MAKE_UTILS)"; \
+		echo "Run the bootstrap script to setup up make utilities"; \
+		exit 1;
+	fi
+	@$(GO_MAKE_UTILS) ensure $(PROJECT_ROOT)
 
 # Include the generated environment variables if the file exists
 -include $(ENV_MK_FILE)
@@ -32,10 +35,10 @@ show-config:
 	fi
 
 # Helper target to rebuild the config tool
-.PHONY: build-config-tool
-build-config-tool:
-	@echo "Building config-tool..."
-	@cd $(GO_MAKE_UTILS_DIR) && go build -o config-tool .
+.PHONY: build-go-make-utils
+build-go-make-utils:
+	@echo "Building go-make-utils..."
+	@cd $(GO_MAKE_UTILS_DIR) && go build -o go-make-utils .
 
 # Clean generated files
 .PHONY: clean-config
