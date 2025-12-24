@@ -17,7 +17,7 @@ const (
 
 func main() {
 	if len(os.Args) < 3 {
-		fmt.Println("Usage: config-tool ensure [project-root]")
+		fmt.Println("Usage: go-make-utils ensure [project-root]")
 		os.Exit(1)
 	}
 

@@ -10,15 +10,15 @@ if [ "$GO_VERSION" -lt 24 ]; then
   echo "Current version: $(go version)"
 fi
 
-# Add the config-tool as a Go tool
-echo "📦 Adding config-tool..."
+# Add the go-make-utils as a Go tool
+echo "📦 Adding go-make-utils..."
 GOPROXY=direct GONOSUMDB=github.com/christianhturner/go-make-utils go get -tool github.com/christianhturner/go-make-utils@latest
 
 # Create tools directory and wrapper script
 mkdir -p tools
 
-echo "🎁 Creating config-tool wrapper..."
-cat >tools/config-tool <<'EOF'
+echo "🎁 Creating go-make-utils wrapper..."
+cat >tools/go-make-utils <<'EOF'
 #!/bin/bash
 set -e
 
@@ -45,7 +45,7 @@ function findpath() {
 }
 
 key="$(hash)"
-cache_file="${WD}/.config-tool.cache"
+cache_file="${WD}/.go-make-utils.cache"
 
 if [[ -f "${cache_file}" ]]; then
   bin="$(findpath "${cache_file}" "${key}")"
@@ -58,14 +58,14 @@ if [[ -f "${cache_file}" ]]; then
 fi
 
 if [[ -z "${bin}" ]]; then
-    bin="$(go tool -n config-tool)"
+    bin="$(go tool -n go-make-utils)"
     echo "${key}=${bin}" >> "${cache_file}"
 fi
 
 exec "${bin}" "$@"
 EOF
 
-chmod +x tools/config-tool
+chmod +x tools/go-make-utils
 
 # Create template if it doesn't exist
 if [ ! -f "local-config.template.json" ]; then
@@ -86,7 +86,7 @@ if [ -f ".gitignore" ]; then
     echo "# Development configuration (go-make-utils)" >>.gitignore
     echo "local-config.json" >>.gitignore
     echo ".env.mk" >>.gitignore
-    echo "tools/.config-tool.cache" >>.gitignore
+    echo "tools/.go-make-utils.cache" >>.gitignore
     echo "✅ Updated .gitignore"
   fi
 else
@@ -94,7 +94,7 @@ else
 # Development configuration (go-make-utils)
 local-config.json
 .env.mk
-tools/.config-tool.cache
+tools/.go-make-utils.cache
 EOF
   echo "✅ Created .gitignore"
 fi
