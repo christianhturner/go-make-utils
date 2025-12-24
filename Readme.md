@@ -45,7 +45,6 @@ Edit `local-config.template.json` with your project's required configuration:
 
 ```json
 {
-  "ada_profile": "YourProfileHere",
   "aws_region": "us-east-1",
   "log_level": "INFO"
 }
@@ -63,10 +62,10 @@ Add `ensure-config` as a dependency to your build targets:
 
 ```makefile
 build: ensure-config
-	go build ./...
+ go build ./...
 
 test: ensure-config
-	go test ./...
+ go test ./...
 ```
 
 ### 3. First-Time Setup
@@ -85,8 +84,7 @@ All keys from `local-config.json` are automatically available as uppercase Make 
 
 ```makefile
 deploy: ensure-config
-	aws s3 sync ./dist s3://my-bucket --region $(AWS_REGION)
-	echo "Using profile: $(ADA_PROFILE)"
+ aws s3 sync ./dist s3://my-bucket --region $(AWS_REGION)
 ```
 
 ## How It Works
